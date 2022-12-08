@@ -116,9 +116,12 @@ void Menu_init(void)
 	Draw_apply_draw();
 
 	Util_expl_init();
-	Extfont_init();
-	for (int i = 0; i < FONT_BLOCK_NUM; i++) Extfont_request_extfont_status(i, true);
-	for (int i = 0; i < SYSTEM_FONT_NUM; i++) Extfont_request_sysfont_status(i, true);
+	Exfont_init();
+	for (int i = 0; i < DEF_EXFONT_NUM_OF_FONT_NAME; i++) Exfont_set_external_font_request_state(i, true);
+	for(int i = 0; i < 4; i++) Exfont_set_system_font_request_state(i, true);
+
+	Exfont_request_load_external_font();
+	Exfont_request_load_system_font();
 	
 	menu_thread_run = true;
 	menu_worker_thread = threadCreate(Menu_worker_thread, (void*)(""), DEF_STACKSIZE, DEF_THREAD_PRIORITY_REALTIME, 1, false);
@@ -181,7 +184,7 @@ void Menu_exit(void)
 	// add here
 
 	Util_expl_exit();
-	Extfont_exit();
+	Exfont_exit();
 
 	thumbnail_downloader_thread_exit_request();
 	async_task_thread_exit_request();
